@@ -1,0 +1,37 @@
+{
+  "name": "weather-app",
+  "version": "1.0.0",
+  "description": "Weather app using Leaflet and Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^26.2.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.weatherapp",
+    "productName": "WeatherApp",
+    "files": [
+      "index.html",
+      "main.js",
+      "main"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}
