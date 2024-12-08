@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather by Coordinates</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+</head>
+<body>
+<div id="map" style="width: 100%; height: 100vh;"></div>
+
+<script>
+    var map = L.map('map').setView([55.7558, 37.6176], 10);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+    }).addTo(map);
+
+    function addWeatherMarker(lat, lon, temperature, description) {
+        var marker = L.marker([lat, lon]).addTo(map);
+        marker.bindPopup(`<b>Temperature:</b> ${temperature}°C<br><b>Description:</b> ${description}`).openPopup();
+    }
+
+    map.on('contextmenu', function(e) {
+        var lat = e.latlng.lat;
+        var lon = e.latlng.lng;
+
+        fetch(`http://localhost:8080/weather?lat=${lat}&lon=${lon}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(`Temperature at [${lat}, ${lon}]: ${data.temperature}°C`);
+                addWeatherMarker(lat, lon, data.temperature, data.description);
+            })
+            .catch(error => {
+                console.error('Error fetching weather data:', error);
+            });
+    });
+</script>
+</body>
+</html>
